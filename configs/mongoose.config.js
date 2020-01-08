@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 mongoose
-  .connect("mongodb://localhost/users-api", { useNewUrlParser: true })
+  .connect("mongodb://localhost/users-apis", { useNewUrlParser: true })
   .then(x => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`
@@ -11,5 +11,4 @@ mongoose
     console.error("Error connecting to mongo", err);
   });
 
-
-  module.exports = mongoose;
+module.exports = mongoose;
