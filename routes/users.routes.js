@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 
 const User = require("../models/User.model");
 
@@ -8,31 +8,30 @@ const read = (req, res, next) => {
   const userId = req.params.id;
   if (!userId) {
     return res.status(400).json({
-      messaage: 'Invalid user id'
+      messaage: "Invalid user id"
     });
   }
-  User.findById(userId)
-    .exec((err, user) => {
-      if (err) {
-        return res.status(404).json({
-          message: 'User not found: ' + err.message
-        });
-      }
-      if (!user) {
-        return res.status(400).json({
-          message: 'Invalid user id: ' + userId
-        });
-      }
-     
-      let usr = {};
-      usr._id = user._id;  
-      usr.name = user.name;
-      usr.email = user.email;
-      usr.birthDates = user.birthDate;
-      usr.address = user.address;
-      return res.status(200).json(usr); 
-    });
-}
+  User.findById(userId).exec((err, user) => {
+    if (err) {
+      return res.status(404).json({
+        message: "User not found: " + err.message
+      });
+    }
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid user id: " + userId
+      });
+    }
+
+    let usr = {};
+    usr._id = user._id;
+    usr.name = user.name;
+    usr.email = user.email;
+    usr.birthDates = user.birthDate;
+    usr.address = user.address;
+    return res.status(200).json(usr);
+  });
+};
 
 // router.get("/:id", (req, res, next) => {
 //   res.json({ mensaje: "estoy en users" });
@@ -42,15 +41,13 @@ router.get("/getusers", (req, res, next) => {
   // const { id, name, email, birthDate, address } = req.body;
   User.find()
     .then(user => {
-      console.log(user.data)
-      return res.status(200).json(user).stringify({
-        message: 'OK'
-     
-      });
-      
-    })
-    .then(user => {
-      return res.user.data.json()
+      console.log(user.data);
+      return res
+        .status(200)
+        .json(user)
+        .stringify({
+          message: "OK"
+        });
     })
     .catch(error => {
       return res.status(500).json({
@@ -60,22 +57,25 @@ router.get("/getusers", (req, res, next) => {
 });
 
 router.post("/createUsers", (req, res, next) => {
-  const { id, name, email, birthDate, address } = req.body;
+  const { _id, name, email, birthDate, address } = req.body;
 
   const newUser = new User({
-    id,
-    name,
-    email,
-    birthDate,
-    address
+    _id,
+    name: "Manuela",
+    email: "manuela@hotmail.es",
+    birthDate: "30/01/1995",
+    address: "mi direccion"
   });
 
   newUser
     .save()
     .then(user => {
-      return res.status(201).json({
-        message: "CREATED"
-      });
+      return res
+        .status(201)
+        .json(user)
+        .stringify({
+          message: "CREATED"
+        });
     })
     .catch(error => {
       return res.status(405).json({
@@ -86,12 +86,14 @@ router.post("/createUsers", (req, res, next) => {
 
 router.get("/getusersById/:id", (req, res, next) => {
   const { id } = req.params;
-  User
-    .findById(id)
+  User.findById(id)
     .then(user => {
-      return res.status(200).json( {
-        message: "OK"
-      });
+      return res
+        .status(200)
+        .json(user)
+        .stringify({
+          message: "OK"
+        });
     })
     .catch(error =>
       res.status(400).json({
@@ -107,11 +109,14 @@ router.get("/getusersById/:id", (req, res, next) => {
 
 router.put("/updateUsersById/:id", (req, res, next) => {
   const { id } = req.params;
-  User.findByIdAndUpdate(id, req.body)
+  User.findByIdAndUpdate(id, { name: "carolina", email: "carolina@hotmail.es" })
     .then(() => {
-      return res.status(200).json({
-        message: "OK"
-      });
+      return res
+        .status(200)
+        .json(user)
+        .stringify({
+          message: "OK"
+        });
     })
     .catch(error =>
       res.status(400).json({
