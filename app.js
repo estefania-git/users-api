@@ -12,7 +12,7 @@ require("./configs/debug.config");
 
 // Base URL's
 app.use("/", require("./routes"));
-// app.use("/users", require("./routes/users.routes"));
-// app.use("/address", require("./routes/address.routes"));
+app.use("/users", require("./routes/users"));
+app.use("/address", require("./routes/address"));
 
 module.exports = app;
