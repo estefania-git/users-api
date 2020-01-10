@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
-router.get("/all", (req, res, next) => {
-  res.json({ mensaje: "estoy en address" });
-});
+const bodyParser = require("body-parser");
+const Address = require("../models/Address");
 
 module.exports = router;
