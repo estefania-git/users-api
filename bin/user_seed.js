@@ -17,19 +17,3 @@ mongoose.connect(dbURL).then(() => {
     });
 });
 
-// ==============================
-
-// const AuthorsController = {
-//     async index(req, res){
-//       const users = await User
-//          .find()
-//          .populate('address');
-//       res.send(users);
-//     },
-//     async show(req, res){
-//       const author = await Author
-//          .findById(req.params.id)
-//          .populate(‘books’);
-//       res.send(author);
-//     }
-//   };
