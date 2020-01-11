@@ -5,7 +5,7 @@ const User = require("../models/User");
 const Address = require("../models/Address");
 
 
-router.get("/getUsers", (req, res, next) => {
+router.get("/getusers", (req, res, next) => {
   User.find()
     .populate("address")
     .then(user => {
@@ -25,8 +25,7 @@ router.get("/getUsers", (req, res, next) => {
 });
 
 
-
-router.post("/createUser", (req, res, next) => {
+router.post("/createUsers", (req, res, next) => {
   const {
     _id = 2,
     name = "Manuela",
@@ -54,12 +53,12 @@ router.post("/createUser", (req, res, next) => {
         .status(201)
         .json(user)
         .stringify({
-          message: "USER CREATED"
+          message: "CREATED"
         });
     })
     .catch(error => {
       return res.status(405).json({
-        message: `There was an error while creating USER: ${error}`
+        message: "Invalid input"
       });
     });
 
@@ -79,19 +78,19 @@ router.post("/createUser", (req, res, next) => {
         .status(201)
         .json(address)
         .stringify({
-          message: "ADDRESS CREATED"
+          message: "CREATED"
         });
     })
     .catch(error => {
       return res.status(405).json({
-        message: `There was an error while creating ADDRESS: ${error}`
+        message: "Invalid input"
       });
     });
 });
 
 
 
-router.get("/getuserById/:id", (req, res, next) => {
+router.get("/getusersById/:id", (req, res, next) => {
   const _id = req.params.id;
   User.findById(_id)
     .populate("address")
@@ -116,9 +115,7 @@ router.get("/getuserById/:id", (req, res, next) => {
 });
 
 
-
-
-router.put("/updateUserById/:id", (req, res, next) => {
+router.put("/updateUsersById/:id", (req, res, next) => {
   const _id = req.params.id;
   const new_user = req.body.user;
   const new_address = req.body.address;
@@ -143,20 +140,29 @@ router.put("/updateUserById/:id", (req, res, next) => {
     }
   }
 
+
+
   // USER DATA
   if (!isEmpty(new_user)) {
     clean(new_user);
     console.log(new_user);
     User.findByIdAndUpdate(_id, { ...new_user })
       .then(user => {
-        res.status(201).json({ user, message: "USER UPDATED" });
+        res.status(200).json({ user, message: "OK" });
       })
-      .catch(error => {
-        res.status(405).json({
-          message: `There was an error while creating USER: ${error}`
-        });
-      });
-  }
+      .catch(error =>
+        res.status(400).json({
+          message: "Invalid user id"
+        })
+      )
+      .catch(error =>
+        res.status(404).json({
+          message: "User not found"
+        })
+      );
+     }
+
+
 
   // ADDRESS DATA
   if (!isEmpty(new_address)) {
@@ -164,19 +170,23 @@ router.put("/updateUserById/:id", (req, res, next) => {
     console.log(new_address);
     Address.findByIdAndUpdate(_id, { ...new_address })
       .then(address => {
-        res.status(201).json({ address, message: "ADDRESS UPDATED" });
+        res.status(200).json({ address, message: "OK" });
       })
-      .catch(error => {
-        res.status(405).json({
-          message: `There was an error while creating ADDRESS: ${error}`
-        });
-      });
+      .catch(error =>
+        res.status(400).json({
+          message: "Invalid user id"
+        })
+      )
+      .catch(error =>
+        res.status(404).json({
+          message: "User not found"
+        })
+      );
   }
 });
 
 
-
-router.delete("/deleteUserById/:id", (req, res, next) => {
+router.delete("/deleteUsersById/:id", (req, res, next) => {
   const _id = req.params.id;
   User.findByIdAndDelete(_id)
     .then(() =>
