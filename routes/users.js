@@ -33,7 +33,8 @@ router.post("/createUser", (req, res, next) => {
     state = "b",
     city = "c",
     country = "d",
-    zip = "e"} = req.body;
+    zip = "e"
+  } = req.body;
 
   const newUser = new User({
     _id,
@@ -59,7 +60,6 @@ router.post("/createUser", (req, res, next) => {
       });
     });
 
-
   const newAddress = new Address({
     _id,
     street,
@@ -67,7 +67,7 @@ router.post("/createUser", (req, res, next) => {
     city,
     country,
     zip
-  })
+  });
 
   newAddress
     .save()
@@ -110,77 +110,93 @@ router.get("/getuserById/:id", (req, res, next) => {
     );
 });
 
-// router.put("/updateUserById/:id", (req, res, next) => { 
-//   const _id = req.params.id;
-//   const new_user = req.body.user
+router.put("/updateUserById/:id", (req, res, next) => {
+  const _id = req.params.id;
+  const new_user = req.body.user;
+  const new_address = req.body.address;
 
-//   const user_keys = ['name', 'email', 'birthDate']
-//   const address_keys = ['street', 'state', 'city', 'country', 'zip']
+  // HELPER FUNCTIONS
+  function isEmpty(obj) {
+    for (var key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
 
-  
-//   function retrieveAddressId(id, callback) {
-//     User.find(id, {'_id': 0, 'address': 1}, function(err, users) {
-//       if (err) {
-//         callback(err, null);
-//       } else {
-//         callback(null, users[0]);
-//       }
-//     });
-//   };
+  function clean(obj) {
+    for (var propName in obj) {
+      if (
+        obj[propName] === null ||
+        obj[propName] === undefined ||
+        obj[propName] === ""
+      ) {
+        delete obj[propName];
+      }
+    }
+  }
 
-//   retrieveAddressId(_id, function(err, user) {
-//     if (err) {
-//       console.log(err);
-//     }
-  
-//     console.log(`holaaaaaaa ${user}`)
-//   });
+  // USER DATA
+  if (!isEmpty(new_user)) {
+    clean(new_user);
+    console.log(new_user);
+    User.findByIdAndUpdate(_id, { ...new_user })
+      .then(user => {
+        console.log("entro");
+        res.status(201).json({ user, message: "USER UPDATED" });
+      })
+      .catch(error => {
+        console.log("entro");
+        res.status(405).json({
+          message: `There was an error while creating USER: ${error}`
+        });
+      });
+  }
 
-//   // let a = async User.findById(_id)
-//   //   .select('address')
-//   //   .exec(function(err, order) {
-//   //     return order.address
-//   //   });
+  // ADDRESS DATA
+  if (!isEmpty(new_address)) {
+    clean(new_address);
+    console.log(new_address);
+    Address.findByIdAndUpdate(_id, { ...new_address })
+      .then(address => {
+        console.log("entro");
+        res.status(201).json({ address, message: "ADDRESS UPDATED" });
+      })
+      .catch(error => {
+        console.log("entro");
+        res.status(405).json({
+          message: `There was an error while creating ADDRESS: ${error}`
+        });
+      });
+  }
 
-//   // console.log(`holaaaaa ${a}`)
+  // const user_keys = ["name", "email", "birthDate"];
+  // const address_keys = ["street", "state", "city", "country", "zip"];
+  // { name: 'algo'}
 
+  // User.findById(_id).then(user => {
+  //   Object.keys(new_user).forEach(key => {
+  //     if (user_keys.includes()) {
+  //     }
 
-//   Object.keys(new_user).forEach( key => {
-//     if (key in user_keys) {
-//       User.findByIdAndUpdate(_id, key)
-//       .then(user => {
-//         return res
-//           .status(201)
-//           .json(user)
-//           .stringify({
-//             message: "USER UPDATED"
-//           });
-//       })
-//       .catch(error => {
-//         return res.status(405).json({
-//           message: `There was an error while creating USER: ${error}`
-//         })
-//       });
-//     }
-
-//     if (key in address_keys) {
-//       Address.findByIdAndUpdate(_address_id, key)
-//       .then(user => {
-//         return res
-//           .status(201)
-//           .json(user)
-//           .stringify({
-//             message: "ADDRESS UPDATED"
-//           })
-//       })
-//       .catch(error => {
-//         return res.status(405).json({
-//           message: `There was an error while updating ADDRESS: ${error}`
-//         });
-//       })
-//     }
-//   })
-// })
+  //     if (key in address_keys) {
+  //       Address.findByIdAndUpdate(user.address, address_key)
+  //         .then(user => {
+  //           return res
+  //             .status(201)
+  //             .json(user)
+  //             .stringify({
+  //               message: "ADDRESS UPDATED"
+  //             });
+  //         })
+  //         .catch(error => {
+  //           return res.status(405).json({
+  //             message: `There was an error while updating ADDRESS: ${error}`
+  //           });
+  //         });
+  //     }
+  //   });
+  // });
+});
 
 router.delete("/deleteUserById/:id", (req, res, next) => {
   const _id = req.params.id;
