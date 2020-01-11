@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const User = require("../models/User");
 const Address = require("../models/Address");
 
+
 router.get("/getUsers", (req, res, next) => {
   User.find()
     .populate("address")
@@ -23,17 +24,19 @@ router.get("/getUsers", (req, res, next) => {
     });
 });
 
+
+
 router.post("/createUser", (req, res, next) => {
   const {
     _id = 2,
     name = "Manuela",
     email = "manuela@hotmail.com",
     birthDate = new Date(1995, 08, 22),
-    street = "a",
-    state = "b",
-    city = "c",
-    country = "d",
-    zip = "e"
+    street = "salsipuedes n 17",
+    state = "Spain",
+    city = "Madrid",
+    country = "Spain",
+    zip = "28014"
   } = req.body;
 
   const newUser = new User({
@@ -86,6 +89,8 @@ router.post("/createUser", (req, res, next) => {
     });
 });
 
+
+
 router.get("/getuserById/:id", (req, res, next) => {
   const _id = req.params.id;
   User.findById(_id)
@@ -109,6 +114,9 @@ router.get("/getuserById/:id", (req, res, next) => {
       })
     );
 });
+
+
+
 
 router.put("/updateUserById/:id", (req, res, next) => {
   const _id = req.params.id;
@@ -141,11 +149,9 @@ router.put("/updateUserById/:id", (req, res, next) => {
     console.log(new_user);
     User.findByIdAndUpdate(_id, { ...new_user })
       .then(user => {
-        console.log("entro");
         res.status(201).json({ user, message: "USER UPDATED" });
       })
       .catch(error => {
-        console.log("entro");
         res.status(405).json({
           message: `There was an error while creating USER: ${error}`
         });
@@ -158,45 +164,17 @@ router.put("/updateUserById/:id", (req, res, next) => {
     console.log(new_address);
     Address.findByIdAndUpdate(_id, { ...new_address })
       .then(address => {
-        console.log("entro");
         res.status(201).json({ address, message: "ADDRESS UPDATED" });
       })
       .catch(error => {
-        console.log("entro");
         res.status(405).json({
           message: `There was an error while creating ADDRESS: ${error}`
         });
       });
   }
-
-  // const user_keys = ["name", "email", "birthDate"];
-  // const address_keys = ["street", "state", "city", "country", "zip"];
-  // { name: 'algo'}
-
-  // User.findById(_id).then(user => {
-  //   Object.keys(new_user).forEach(key => {
-  //     if (user_keys.includes()) {
-  //     }
-
-  //     if (key in address_keys) {
-  //       Address.findByIdAndUpdate(user.address, address_key)
-  //         .then(user => {
-  //           return res
-  //             .status(201)
-  //             .json(user)
-  //             .stringify({
-  //               message: "ADDRESS UPDATED"
-  //             });
-  //         })
-  //         .catch(error => {
-  //           return res.status(405).json({
-  //             message: `There was an error while updating ADDRESS: ${error}`
-  //           });
-  //         });
-  //     }
-  //   });
-  // });
 });
+
+
 
 router.delete("/deleteUserById/:id", (req, res, next) => {
   const _id = req.params.id;
