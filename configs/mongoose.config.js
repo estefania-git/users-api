@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 
+const dbURL = "mongodb+srv://User-API:Caramelo321@cluster0-kvcfs.mongodb.net/User-APIS?retryWrites=true&w=majority";
+
 mongoose
-  .connect("mongodb://localhost/User-API", { useNewUrlParser: true })
+  .connect(dbURL, { useNewUrlParser: true })
   .then(x => {
     console.log(
       `Connected to Mongo! Database name: "${x.connections[0].name}"`
